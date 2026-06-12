@@ -1,0 +1,115 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model Film {
+  id          String  @id
+  title       String
+  genre       String
+  year        Int
+  image       String
+  description String?
+  featured    Boolean @default(false)
+  sortOrder   Int     @default(0) @map("sort_order")
+
+  @@map("films")
+}
+
+model NewsItem {
+  id        String @id
+  title     String
+  excerpt   String
+  date      String
+  category  String
+  image     String
+  sortOrder Int    @default(0) @map("sort_order")
+
+  @@map("news_items")
+}
+
+model Studio {
+  id          String @id
+  title       String
+  description String
+  icon        String
+  sortOrder   Int    @default(0) @map("sort_order")
+
+  @@map("studios")
+}
+
+model Career {
+  id          String  @id
+  title       String
+  department  String
+  location    String
+  type        String
+  description String?
+  sortOrder   Int     @default(0) @map("sort_order")
+
+  @@map("careers")
+}
+
+model ProcessStep {
+  id          String @id
+  title       String
+  description String
+  step        Int
+
+  @@map("process_steps")
+}
+
+model BtsItem {
+  id        String @id
+  title     String
+  image     String
+  duration  String
+  sortOrder Int    @default(0) @map("sort_order")
+
+  @@map("bts_items")
+}
+
+model TeamMember {
+  id          String  @id
+  name        String
+  role        String
+  department  String
+  bio         String
+  image       String
+  featured    Boolean @default(false)
+  socialLinks Json?   @map("social_links")
+  sortOrder   Int     @default(0) @map("sort_order")
+
+  @@map("team_members")
+}
+
+model Application {
+  id             String   @id @default(cuid())
+  careerId       String   @map("career_id")
+  careerTitle    String   @map("career_title")
+  name           String
+  email          String
+  phone          String?
+  coverLetter    String?  @map("cover_letter")
+  resumeFilename String   @map("resume_filename")
+  resumeObject   String   @map("resume_object")
+  resumeUrl      String   @map("resume_url")
+  status         String   @default("new")
+  submittedAt    DateTime @default(now()) @map("submitted_at")
+
+  @@index([careerId])
+  @@map("applications")
+}
+
+// Singleton config blobs: site, navigation, hero, sections, about, teamPage, _meta
+model SiteSetting {
+  key       String   @id
+  value     Json
+  updatedAt DateTime @updatedAt @map("updated_at")
+
+  @@map("site_settings")
+}
