@@ -50,29 +50,6 @@ export default function FilmCard({
         <div className="absolute inset-0 bg-gradient-to-t from-background via-background/50 to-transparent opacity-90" />
         <div className="absolute inset-0 bg-neon/0 transition-colors duration-500 group-hover:bg-neon/10" />
 
-        <div
-          className={cn(
-            "absolute inset-0 flex items-center justify-center opacity-0 transition-opacity duration-500 group-hover:opacity-100",
-            isCompact && "scale-90"
-          )}
-        >
-          <div
-            className={cn(
-              "flex items-center justify-center rounded-full border border-white/30 bg-white/10 backdrop-blur-md glow-neon",
-              isCompact ? "h-10 w-10" : "h-16 w-16"
-            )}
-          >
-            <svg
-              className={cn("text-white", isCompact ? "ml-0.5 h-3.5 w-3.5" : "ml-1 h-6 w-6")}
-              fill="currentColor"
-              viewBox="0 0 24 24"
-              aria-hidden
-            >
-              <path d="M8 5v14l11-7z" />
-            </svg>
-          </div>
-        </div>
-
         <div className={cn("absolute right-0 bottom-0 left-0", isCompact ? "p-3" : "p-5")}>
           <p
             className={cn(

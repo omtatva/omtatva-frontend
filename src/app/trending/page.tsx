@@ -2,7 +2,6 @@ import type { Metadata } from "next";
 import PageHero from "@/components/ui/PageHero";
 import TrendingCard from "@/components/cards/TrendingCard";
 import { getCms } from "@/lib/cms";
-import { PAGE_HERO_IMAGES } from "@/lib/images";
 
 export const metadata: Metadata = {
   title: "Trending",
@@ -18,7 +17,7 @@ export default async function TrendingPage() {
       <PageHero
         title="Trending"
         subtitle="The stories captivating audiences and redefining AI cinema."
-        image={PAGE_HERO_IMAGES.trending}
+        image={cms.pageHeroes.trending}
       />
       <section className="section-padding">
         <div className="mx-auto max-w-7xl space-y-8">

@@ -5,7 +5,6 @@ import PageHero from "@/components/ui/PageHero";
 import CareerApplicationForm from "@/components/sections/CareerApplicationForm";
 import { getCms } from "@/lib/cms";
 import { getCareerById } from "@/lib/careers";
-import { PAGE_HERO_IMAGES } from "@/lib/images";
 
 interface CareerDetailPageProps {
   params: Promise<{ id: string }>;
@@ -45,7 +44,7 @@ export default async function CareerDetailPage({ params }: CareerDetailPageProps
       <PageHero
         title={career.title}
         subtitle={`${career.department} · ${career.location} · ${career.type}`}
-        image={PAGE_HERO_IMAGES.careers}
+        image={cms.pageHeroes.careers}
       />
       <section className="section-padding">
         <div className="mx-auto max-w-2xl">

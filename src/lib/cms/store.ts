@@ -1,6 +1,5 @@
 import { prisma } from "@/lib/db";
 import type { CmsData } from "./types";
-import { createDefaultCms } from "./seed";
 import type {
   BTSItem,
   Career,
@@ -38,11 +37,23 @@ export async function readCms(): Promise<CmsData> {
     settings.map((s: { key: string; value: unknown }) => [s.key, s.value])
   );
 
-  // Empty database → bootstrap with defaults so the site works on first run.
-  if (!cfg.has("site")) {
-    const defaults = createDefaultCms();
-    await writeCms(defaults);
-    return defaults;
+  // No defaults are seeded: the database is the single source of truth.
+  const requiredKeys = [
+    "site",
+    "navigation",
+    "hero",
+    "sections",
+    "pageHeroes",
+    "about",
+    "teamPage",
+  ];
+  const missing = requiredKeys.filter((k) => !cfg.has(k));
+  if (missing.length > 0) {
+    throw new Error(
+      `CMS is not initialized. Missing site_settings keys: ${missing.join(
+        ", "
+      )}. Populate them via the admin API before serving the site.`
+    );
   }
 
   const meta = (cfg.get(META_KEY) ?? {}) as {
@@ -57,6 +68,7 @@ export async function readCms(): Promise<CmsData> {
     navigation: cfg.get("navigation") as unknown as CmsData["navigation"],
     hero: cfg.get("hero") as unknown as CmsData["hero"],
     sections: cfg.get("sections") as unknown as CmsData["sections"],
+    pageHeroes: cfg.get("pageHeroes") as unknown as CmsData["pageHeroes"],
     about: cfg.get("about") as unknown as CmsData["about"],
     team: cfg.get("teamPage") as unknown as CmsData["team"],
     films: films.map(toFilm),
@@ -137,6 +149,7 @@ export async function writeCms(data: CmsData): Promise<CmsData> {
         title: b.title,
         image: b.image,
         duration: b.duration,
+        video: b.video ?? null,
         sortOrder: i,
       })),
     }),
@@ -159,6 +172,7 @@ export async function writeCms(data: CmsData): Promise<CmsData> {
       navigation: data.navigation,
       hero: data.hero,
       sections: data.sections,
+      pageHeroes: data.pageHeroes,
       about: data.about,
       teamPage: data.team,
       [META_KEY]: { version, updatedAt },
@@ -273,9 +287,16 @@ type BtsRow = {
   title: string;
   image: string;
   duration: string;
+  video?: string | null;
 };
 function toBtsItem(r: BtsRow): BTSItem {
-  return { id: r.id, title: r.title, image: r.image, duration: r.duration };
+  return {
+    id: r.id,
+    title: r.title,
+    image: r.image,
+    duration: r.duration,
+    video: r.video ?? undefined,
+  };
 }
 
 type TeamRow = {

@@ -19,6 +19,16 @@ export function setSmoothScroller(instance: Lenis | null) {
   }
 }
 
+/** Pause smooth scrolling (e.g. while a modal/lightbox is open). */
+export function stopScroll() {
+  lenis?.stop();
+}
+
+/** Resume smooth scrolling after a modal/lightbox closes. */
+export function startScroll() {
+  lenis?.start();
+}
+
 export function getScrollY(): number {
   if (typeof window === "undefined") return 0;
   return lenis?.scroll ?? window.scrollY;
@@ -40,4 +50,29 @@ export function scrollToTop() {
   }
 
   window.scrollTo({ top: 0, behavior: reduceMotion ? "auto" : "smooth" });
+}
+
+/**
+ * Smoothly scroll to the element matching a hash (e.g. "#showreel").
+ * Returns true if a matching target existed and the scroll was handled,
+ * so callers can fall back to default navigation when it returns false.
+ */
+export function scrollToHash(hash: string): boolean {
+  if (typeof window === "undefined") return false;
+
+  const id = hash.startsWith("#") ? hash.slice(1) : hash;
+  if (!id) return false;
+
+  const target = document.getElementById(id);
+  if (!target) return false;
+
+  const reduceMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+
+  if (lenis) {
+    lenis.scrollTo(target, { immediate: reduceMotion, duration: reduceMotion ? 0 : 1.1 });
+  } else {
+    target.scrollIntoView({ behavior: reduceMotion ? "auto" : "smooth" });
+  }
+
+  return true;
 }

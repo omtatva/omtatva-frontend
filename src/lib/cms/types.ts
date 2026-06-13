@@ -100,6 +100,16 @@ export interface NavigationSettings {
   megaMenus: MegaMenuConfig[];
 }
 
+/** Hero background images for the standalone listing/detail pages. */
+export interface PageHeroesConfig {
+  films: string;
+  trending: string;
+  news: string;
+  studios: string;
+  contact: string;
+  careers: string;
+}
+
 export interface CmsData {
   version: number;
   updatedAt: string;
@@ -121,6 +131,7 @@ export interface CmsData {
       buttonLabel: string;
     };
   };
+  pageHeroes: PageHeroesConfig;
   films: Film[];
   newsItems: NewsItem[];
   studios: Studio[];
@@ -136,6 +147,7 @@ export type CmsSectionKey =
   | "site"
   | "navigation"
   | "hero"
+  | "pageHeroes"
   | "featuredFilms"
   | "trending"
   | "creativeStudios"

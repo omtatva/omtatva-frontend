@@ -6,13 +6,11 @@
     "dev": "next dev",
     "build": "NODE_OPTIONS='--max-old-space-size=4096' next build",
     "start": "next start",
-    "seed:cms": "node scripts/seed-cms.mjs",
     "optimize:hero-video": "powershell -ExecutionPolicy Bypass -File scripts/optimize-hero-video.ps1 -File hero3.mp4",
     "lint": "eslint",
     "prisma:generate": "prisma generate",
     "db:push": "prisma db push",
     "db:migrate": "prisma migrate dev",
-    "db:seed": "node --env-file=.env scripts/seed-db.mjs",
     "db:studio": "prisma studio",
     "postinstall": "prisma generate"
   },

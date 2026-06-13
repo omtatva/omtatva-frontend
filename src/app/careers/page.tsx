@@ -2,7 +2,6 @@ import type { Metadata } from "next";
 import PageHero from "@/components/ui/PageHero";
 import CareerCard from "@/components/cards/CareerCard";
 import { getCms } from "@/lib/cms";
-import { PAGE_HERO_IMAGES } from "@/lib/images";
 
 export const metadata: Metadata = {
   title: "Careers",
@@ -17,7 +16,7 @@ export default async function CareersPage() {
       <PageHero
         title="Careers"
         subtitle="Join a team of visionaries building the future of cinematic storytelling."
-        image={PAGE_HERO_IMAGES.careers}
+        image={cms.pageHeroes.careers}
       />
       <section className="section-padding">
         <div className="mx-auto max-w-4xl space-y-4">

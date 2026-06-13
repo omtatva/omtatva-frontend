@@ -64,11 +64,12 @@ model ProcessStep {
 }
 
 model BtsItem {
-  id        String @id
+  id        String  @id
   title     String
   image     String
   duration  String
-  sortOrder Int    @default(0) @map("sort_order")
+  video     String?
+  sortOrder Int     @default(0) @map("sort_order")
 
   @@map("bts_items")
 }

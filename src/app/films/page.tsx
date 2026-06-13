@@ -2,7 +2,6 @@ import type { Metadata } from "next";
 import PageHero from "@/components/ui/PageHero";
 import FilmCard from "@/components/cards/FilmCard";
 import { getCms } from "@/lib/cms";
-import { PAGE_HERO_IMAGES } from "@/lib/images";
 
 export async function generateMetadata(): Promise<Metadata> {
   const cms = await getCms();
@@ -20,7 +19,7 @@ export default async function FilmsPage() {
       <PageHero
         title="Films & Projects"
         subtitle="Original productions where human vision meets artificial intelligence."
-        image={PAGE_HERO_IMAGES.films}
+        image={cms.pageHeroes.films}
       />
       <section className="section-padding">
         <div className="mx-auto max-w-7xl">

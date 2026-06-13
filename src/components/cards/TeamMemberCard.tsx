@@ -9,6 +9,16 @@ interface TeamMemberCardProps {
   featured?: boolean;
 }
 
+function getInitials(name: string) {
+  return name
+    .split(" ")
+    .map((part) => part[0])
+    .filter(Boolean)
+    .slice(0, 2)
+    .join("")
+    .toUpperCase();
+}
+
 export default function TeamMemberCard({ member, featured = false }: TeamMemberCardProps) {
   if (featured) {
     return (
@@ -22,14 +32,20 @@ export default function TeamMemberCard({ member, featured = false }: TeamMemberC
           <div className="absolute inset-x-0 top-0 z-10 h-px bg-gradient-to-r from-transparent via-neon/60 to-transparent opacity-0 transition-opacity duration-500 group-hover:opacity-100" />
 
           <div className="relative aspect-[3/4] overflow-hidden">
-            <Image
-              src={member.image}
-              alt={member.name}
-              fill
-              loading="lazy"
-              className="object-cover transition-all duration-700 group-hover:scale-105 grayscale-[20%] group-hover:grayscale-0"
-              sizes="(max-width: 640px) 45vw, 240px"
-            />
+            {member.image ? (
+              <Image
+                src={member.image}
+                alt={member.name}
+                fill
+                loading="lazy"
+                className="object-cover transition-all duration-700 group-hover:scale-105 grayscale-[20%] group-hover:grayscale-0"
+                sizes="(max-width: 640px) 45vw, 240px"
+              />
+            ) : (
+              <div className="absolute inset-0 flex items-center justify-center bg-white/[0.03]">
+                <span className="font-display text-4xl text-ice/30">{getInitials(member.name)}</span>
+              </div>
+            )}
             <div className="absolute inset-0 bg-gradient-to-t from-background via-background/20 to-transparent" />
             <div className="absolute inset-0 bg-neon/0 transition-colors duration-500 group-hover:bg-neon/[0.06]" />
           </div>
@@ -79,14 +95,20 @@ export default function TeamMemberCard({ member, featured = false }: TeamMemberC
       data-gsap-reveal
     >
       <div className="relative aspect-[4/5] overflow-hidden">
-        <Image
-          src={member.image}
-          alt={member.name}
-          fill
-          loading="lazy"
-          className="object-cover transition-transform duration-700 group-hover:scale-105"
-          sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 25vw"
-        />
+        {member.image ? (
+          <Image
+            src={member.image}
+            alt={member.name}
+            fill
+            loading="lazy"
+            className="object-cover transition-transform duration-700 group-hover:scale-105"
+            sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 25vw"
+          />
+        ) : (
+          <div className="absolute inset-0 flex items-center justify-center bg-white/[0.03]">
+            <span className="font-display text-5xl text-ice/30">{getInitials(member.name)}</span>
+          </div>
+        )}
         <div className="absolute inset-0 bg-gradient-to-t from-background via-background/50 to-transparent opacity-90 transition-opacity duration-500 group-hover:opacity-95" />
         <div className="absolute inset-0 bg-neon/0 transition-colors duration-500 group-hover:bg-neon/[0.05]" />
 

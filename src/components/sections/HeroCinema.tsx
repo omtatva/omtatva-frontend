@@ -1,11 +1,19 @@
 "use client";
 
-import { useCallback, useEffect, useRef, useState, type CSSProperties } from "react";
+import {
+  useCallback,
+  useEffect,
+  useRef,
+  useState,
+  type CSSProperties,
+  type MouseEvent,
+} from "react";
 import Image from "next/image";
 import MagneticButton from "@/components/ui/MagneticButton";
 import HeroLiquidTitle from "@/components/sections/HeroLiquidTitle";
 import { videoMimeType } from "@/lib/media";
 import { shouldPlayHeroVideo, shouldUseLightMode } from "@/lib/performance";
+import { scrollToHash } from "@/lib/scroll";
 import type { HeroSection } from "@/lib/cms/types";
 
 interface HeroCinemaProps {
@@ -22,6 +30,17 @@ export default function HeroCinema({ hero }: HeroCinemaProps) {
   const onOverlayStyle = useCallback((style: CSSProperties | null) => {
     setOverlayStyle(style);
   }, []);
+
+  const secondaryHref = hero.secondaryCta.href;
+  const handleSecondaryClick = useCallback(
+    (event: MouseEvent) => {
+      if (!secondaryHref.startsWith("#")) return;
+      if (scrollToHash(secondaryHref)) {
+        event.preventDefault();
+      }
+    },
+    [secondaryHref]
+  );
 
   useEffect(() => {
     const reduceMotion = window.matchMedia("(prefers-reduced-motion: reduce)");
@@ -47,13 +66,39 @@ export default function HeroCinema({ hero }: HeroCinemaProps) {
     const el = videoRef.current;
     if (!el || !playVideo) return;
 
+    // iOS/mobile Safari only autoplays inline when the element's `muted`
+    // DOM property is genuinely true. React does not reliably reflect the
+    // `muted` prop to the property, so set it (and the related flags)
+    // imperatively before attempting playback.
+    el.muted = true;
+    el.defaultMuted = true;
+    el.setAttribute("muted", "");
+    el.playsInline = true;
+
     const tryPlay = () => {
       void el.play().catch(() => {});
     };
 
     tryPlay();
     el.addEventListener("canplay", tryPlay);
-    return () => el.removeEventListener("canplay", tryPlay);
+    el.addEventListener("loadeddata", tryPlay);
+
+    // If the user interacts with the page, retry once (covers cases where
+    // Safari blocked the initial autoplay attempt).
+    const onFirstInteraction = () => {
+      tryPlay();
+      window.removeEventListener("touchstart", onFirstInteraction);
+      window.removeEventListener("click", onFirstInteraction);
+    };
+    window.addEventListener("touchstart", onFirstInteraction, { passive: true });
+    window.addEventListener("click", onFirstInteraction);
+
+    return () => {
+      el.removeEventListener("canplay", tryPlay);
+      el.removeEventListener("loadeddata", tryPlay);
+      window.removeEventListener("touchstart", onFirstInteraction);
+      window.removeEventListener("click", onFirstInteraction);
+    };
   }, [playVideo, hero.video]);
 
   const showVideo = playVideo && Boolean(hero.video);
@@ -126,7 +171,11 @@ export default function HeroCinema({ hero }: HeroCinemaProps) {
           <MagneticButton href={hero.primaryCta.href} variant="primary">
             {hero.primaryCta.label}
           </MagneticButton>
-          <MagneticButton href={hero.secondaryCta.href} variant="outline">
+          <MagneticButton
+            href={hero.secondaryCta.href}
+            variant="outline"
+            onClick={handleSecondaryClick}
+          >
             {hero.secondaryCta.label}
           </MagneticButton>
         </div>

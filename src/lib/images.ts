@@ -19,14 +19,3 @@ export const IMAGE_SIZES = {
   bts: 400,
   news: 600,
 } as const;
-
-export const PAGE_HERO_IMAGES = {
-  films: unsplash("https://images.unsplash.com/photo-1489599849927-2ee91cede3ba", IMAGE_SIZES.pageHero),
-  trending: unsplash("https://images.unsplash.com/photo-1535010121840-743a46c928a4", IMAGE_SIZES.pageHero),
-  news: unsplash("https://images.unsplash.com/photo-1514525253161-7a46d19cd819", IMAGE_SIZES.pageHero),
-  studios: unsplash("https://images.unsplash.com/photo-1574717024653-61fd2cf4d44d", IMAGE_SIZES.pageHero),
-  about: unsplash("https://images.unsplash.com/photo-1594909127802-573f457b6a3c", IMAGE_SIZES.pageHero),
-  careers: unsplash("https://images.unsplash.com/photo-1522071820081-009f0129c71c", IMAGE_SIZES.pageHero),
-  contact: unsplash("https://images.unsplash.com/photo-1558618666-fcd25c85cd64", IMAGE_SIZES.pageHero),
-  team: unsplash("https://images.unsplash.com/photo-1522071820081-009f0129c71c", IMAGE_SIZES.pageHero),
-} as const;

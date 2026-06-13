@@ -3,7 +3,6 @@ import PageHero from "@/components/ui/PageHero";
 import StudioCard from "@/components/cards/StudioCard";
 import StudiosDirectory from "@/components/sections/StudiosDirectory";
 import { getCms } from "@/lib/cms";
-import { PAGE_HERO_IMAGES } from "@/lib/images";
 
 export const metadata: Metadata = {
   title: "Creative Studios",
@@ -19,7 +18,7 @@ export default async function StudiosPage() {
       <PageHero
         title="Creative Studios"
         subtitle="Specialized divisions united by a single vision — cinematic excellence."
-        image={PAGE_HERO_IMAGES.studios}
+        image={cms.pageHeroes.studios}
       />
       <section className="section-padding">
         <div className="mx-auto max-w-7xl grid gap-6 sm:grid-cols-2 lg:grid-cols-3">

@@ -45,6 +45,8 @@ export interface BTSItem {
   title: string;
   image: string;
   duration: string;
+  /** Optional reel video URL played in the lightbox when the tile is clicked. */
+  video?: string;
 }
 
 export interface TeamMember {

@@ -6,7 +6,7 @@ import CreativeStudios from "@/components/sections/CreativeStudios";
 import TeamSection from "@/components/sections/TeamSection";
 import NewsSection from "@/components/sections/NewsSection";
 import SectionSkeleton from "@/components/ui/SectionSkeleton";
-import { getCms, resolveFilms, resolveTeamMembers, createDefaultCms } from "@/lib/cms";
+import { getCms, resolveFilms, resolveTeamMembers } from "@/lib/cms";
 
 const ProcessTimeline = dynamic(() => import("@/components/sections/ProcessTimeline"), {
   loading: () => <SectionSkeleton />,
@@ -32,7 +32,7 @@ export default async function HomePage() {
     cms.films.find((f) => f.id === sections.trending.featuredFilmId) ?? cms.films[0];
   const sideTrending = resolveFilms(cms, sections.trending.sideFilmIds);
   const homeNews = cms.newsItems.slice(0, sections.news.homeLimit);
-  const teamSection = sections.team ?? createDefaultCms().sections.team;
+  const teamSection = sections.team;
   const homeTeam = resolveTeamMembers(cms, teamSection.memberIds, teamSection.limit);
 
   return (

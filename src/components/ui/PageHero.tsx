@@ -24,9 +24,10 @@ export default function PageHero({
           src={image}
           alt=""
           fill
+          priority
+          fetchPriority="high"
           className="object-cover"
           sizes="100vw"
-          loading="lazy"
         />
         <div className="absolute inset-0 hero-overlay" />
         <div className="absolute inset-0 cinematic-gradient" />

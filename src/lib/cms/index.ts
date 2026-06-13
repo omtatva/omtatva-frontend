@@ -4,7 +4,6 @@ import { readCms } from "./store";
 import type { CmsData } from "./types";
 
 export type { CmsData, CmsSectionKey, SectionMeta, HeroSection } from "./types";
-export { createDefaultCms } from "./seed";
 export { readCms, writeCms, verifyAdminKey } from "./store";
 
 export const CMS_CACHE_TAG = "cms";

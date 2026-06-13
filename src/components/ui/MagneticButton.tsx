@@ -8,7 +8,7 @@ interface MagneticButtonProps {
   children: ReactNode;
   className?: string;
   href?: string;
-  onClick?: () => void;
+  onClick?: (event: MouseEvent) => void;
   type?: "button" | "submit" | "reset";
   variant?: "primary" | "outline" | "ghost";
 }
@@ -66,6 +66,7 @@ export default function MagneticButton({
         ref={ref as React.RefObject<HTMLAnchorElement>}
         href={href}
         className={cn(baseClass, "group")}
+        onClick={onClick}
         onMouseMove={handleMouseMove}
         onMouseLeave={handleMouseLeave}
         whileTap={{ scale: 0.97 }}
