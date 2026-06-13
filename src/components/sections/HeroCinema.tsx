@@ -67,37 +67,59 @@ export default function HeroCinema({ hero }: HeroCinemaProps) {
     if (!el || !playVideo) return;
 
     // iOS/mobile Safari only autoplays inline when the element's `muted`
-    // DOM property is genuinely true. React does not reliably reflect the
-    // `muted` prop to the property, so set it (and the related flags)
-    // imperatively before attempting playback.
+    // DOM property is genuinely true. React does not reflect the `muted` prop
+    // to the property (and omits it from SSR HTML), so set it (and the related
+    // flags) imperatively before attempting playback.
     el.muted = true;
     el.defaultMuted = true;
     el.setAttribute("muted", "");
     el.playsInline = true;
+    el.setAttribute("playsinline", "");
+    el.setAttribute("webkit-playsinline", "");
 
     const tryPlay = () => {
-      void el.play().catch(() => {});
+      const attempt = el.play();
+      if (attempt && typeof attempt.catch === "function") {
+        attempt.catch(() => {
+          // Safari can reject the promise if metadata isn't ready yet; make
+          // sure loading has actually started so the retries below have data.
+          if (el.readyState === 0) el.load();
+        });
+      }
     };
 
     tryPlay();
-    el.addEventListener("canplay", tryPlay);
+    el.addEventListener("loadedmetadata", tryPlay);
     el.addEventListener("loadeddata", tryPlay);
+    el.addEventListener("canplay", tryPlay);
 
-    // If the user interacts with the page, retry once (covers cases where
-    // Safari blocked the initial autoplay attempt).
+    // Safari (esp. Low Power Mode) blocks the initial muted autoplay; retry on
+    // the first user gesture or when the tab/page becomes visible again.
     const onFirstInteraction = () => {
       tryPlay();
       window.removeEventListener("touchstart", onFirstInteraction);
+      window.removeEventListener("touchend", onFirstInteraction);
       window.removeEventListener("click", onFirstInteraction);
+      window.removeEventListener("scroll", onFirstInteraction);
+    };
+    const onVisibility = () => {
+      if (document.visibilityState === "visible") tryPlay();
     };
     window.addEventListener("touchstart", onFirstInteraction, { passive: true });
+    window.addEventListener("touchend", onFirstInteraction, { passive: true });
     window.addEventListener("click", onFirstInteraction);
+    window.addEventListener("scroll", onFirstInteraction, { passive: true });
+    document.addEventListener("visibilitychange", onVisibility);
 
     return () => {
-      el.removeEventListener("canplay", tryPlay);
+      el.removeEventListener("loadedmetadata", tryPlay);
       el.removeEventListener("loadeddata", tryPlay);
+      el.removeEventListener("canplay", tryPlay);
       window.removeEventListener("touchstart", onFirstInteraction);
+      window.removeEventListener("touchend", onFirstInteraction);
       window.removeEventListener("click", onFirstInteraction);
+      window.removeEventListener("scroll", onFirstInteraction);
+      document.removeEventListener("visibilitychange", onVisibility);
     };
   }, [playVideo, hero.video]);
 

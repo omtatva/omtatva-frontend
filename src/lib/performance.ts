@@ -11,14 +11,19 @@ export function shouldUseLightMode(): boolean {
   return reducedMotion || !!saveData || narrow || lowMemory;
 }
 
-/** Hero background video: respect reduced motion and save-data only (plays on mobile). */
+/**
+ * Hero background video: only skip when the user is on a metered/Save-Data
+ * connection. We intentionally do NOT gate on `prefers-reduced-motion`: iOS
+ * maps Settings → Accessibility → Reduce Motion to that query, which would
+ * otherwise drop the muted background loop entirely on many iPhones. The heavy
+ * scroll/liquid effects are still disabled separately via `shouldUseLightMode`.
+ */
 export function shouldPlayHeroVideo(): boolean {
   if (typeof window === "undefined") return true;
 
-  const reducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
   const saveData = "connection" in navigator && (navigator as Navigator & { connection?: { saveData?: boolean } }).connection?.saveData;
 
-  return !reducedMotion && !saveData;
+  return !saveData;
 }
 
 export function onIdle(callback: () => void, timeout = 2000): () => void {
