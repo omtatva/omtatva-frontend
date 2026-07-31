@@ -1,6 +1,6 @@
 /** Default hero background video in `public/`. Override via CMS `hero.video`. */
-export const HERO_VIDEO = "/hero3.mp4";
-
+// export const HERO_VIDEO = "/hero3.mp4";
+export const HERO_VIDEO = "https://storage.googleapis.com/omtatvabucket/video/anime%20teaser%20v1%20f.mp4";
 export function videoMimeType(src: string): string {
   if (src.endsWith(".webm")) return "video/webm";
   if (src.endsWith(".ogg") || src.endsWith(".ogv")) return "video/ogg";
